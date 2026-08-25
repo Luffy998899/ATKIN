@@ -1,0 +1,203 @@
+@import "tailwindcss";
+
+/* =========================================================
+   ATIN HEALTHCARE
+   Art direction: clinical editorial.
+   Bone paper, ink type, the logo's blue and green used as
+   flat printed fields — never as glow, never as a gradient
+   behind a headline.
+   ========================================================= */
+@theme {
+  /* paper + ink */
+  --color-bone: #f1efe9;
+  --color-bone-2: #e6e3da;
+  --color-bone-3: #dbd7cc;
+  --color-ink: #0b0e0d;
+  --color-ink-2: #171b1a;
+  --color-ink-3: #2b302e;
+  --color-rule: #ccc6ba;
+  --color-rule-dark: #2e3331;
+
+  /* brand — taken off the logo */
+  --color-navy: #062159;
+  --color-blue: #0c63c4;
+  --color-sky: #29a9e1;
+  --color-forest: #0b3d24;
+  --color-leaf: #2fa84f;
+  --color-lime: #8cc63e;
+
+  --font-display: var(--font-bricolage), Georgia, serif;
+  --font-sans: var(--font-instrument), "Helvetica Neue", Arial, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, "SFMono-Regular", monospace;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quint: cubic-bezier(0.83, 0, 0.17, 1);
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+@keyframes marquee-reverse {
+  from { transform: translateX(-50%); }
+  to   { transform: translateX(0); }
+}
+
+/* ---------------------------------------------------------
+   Base
+   --------------------------------------------------------- */
+:root {
+  --nav-h: 72px;
+  color-scheme: light;
+}
+
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+body {
+  background: var(--color-bone);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-synthesis-weight: none;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--color-lime);
+  color: var(--color-ink);
+}
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--color-bone-2); }
+::-webkit-scrollbar-thumb { background: var(--color-ink); }
+
+/* ---------------------------------------------------------
+   Layout
+   --------------------------------------------------------- */
+@utility container-x {
+  width: 100%;
+  margin-inline: auto;
+  max-width: 90rem;
+  padding-inline: 1.25rem;
+  @media (min-width: 768px) { padding-inline: 2.25rem; }
+  @media (min-width: 1280px) { padding-inline: 3.5rem; }
+}
+
+/* The 12-column editorial grid the whole site is set on. */
+@utility grid-12 {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: 1.25rem;
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: 1.5rem;
+  }
+}
+
+/* ---------------------------------------------------------
+   Type
+   --------------------------------------------------------- */
+@utility display {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.028em;
+  line-height: 0.94;
+  font-variation-settings: "wdth" 100, "opsz" 40;
+}
+
+/* Small mono caps — replaces the pill badge entirely. */
+@utility label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+@utility num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+/* Hanging hairline used to head a column, Swiss style. */
+@utility rule-top {
+  border-top: 1px solid var(--color-rule);
+}
+
+@utility rule-top-dark {
+  border-top: 1px solid var(--color-rule-dark);
+}
+
+/* ---------------------------------------------------------
+   Motion helpers
+   --------------------------------------------------------- */
+.marquee-track { display: flex; width: max-content; }
+
+/* Split-text spans — the component sets `inline-block` on the
+   wrapper so words still flow and wrap inside their heading. */
+.split-line { overflow: hidden; }
+.split-word { display: inline-block; will-change: transform; }
+
+/* Underline that draws in from the left on hover. */
+.link-draw {
+  position: relative;
+  display: inline-block;
+}
+.link-draw::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -0.12em;
+  height: 1px;
+  width: 100%;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.link-draw:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* ---------------------------------------------------------
+   Focus + cursor
+   --------------------------------------------------------- */
+:where(a, button, input, textarea, select):focus-visible {
+  outline: 2px solid var(--color-leaf);
+  outline-offset: 3px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .custom-cursor-active,
+  .custom-cursor-active * { cursor: none !important; }
+}
+
+/* Paper grain, barely there. */
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
